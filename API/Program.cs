@@ -5,17 +5,26 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<DataContext>(opts => {
+builder.Services.AddDbContext<DataContext>(opts =>
+{
     opts.UseSqlServer(builder.Configuration.GetConnectionString("DBCS"), e => e.MigrationsAssembly("Persistence"));
+});
+builder.Services.AddCors(opts =>
+{
+    opts.AddPolicy("CorsPolicy", policy =>
+    {
+        policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+    });
 });
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    
+
 }
 
+app.UseCors("CorsPolicy");
 app.UseAuthorization();
 app.MapControllers();
 
