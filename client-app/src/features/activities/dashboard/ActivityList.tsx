@@ -1,17 +1,12 @@
 import { SyntheticEvent, useState } from 'react';
 import { Button, Icon, Item, Label, Segment } from 'semantic-ui-react';
 
-import { Activity } from '../../../app/models/activity';
 import { useStore } from '../../../app/stores/store';
 
-interface Props {
-  activities: Activity[];
-}
-
-const ActivityList = ({ activities }: Props) => {
+const ActivityList = () => {
   const [target, setTarget] = useState('');
   const { activityStore } = useStore();
-  const { selectActivity, deleteActivity, loading } = activityStore;
+  const { selectActivity, deleteActivity, activitiesByDate, loading } = activityStore;
 
   const handleActivityDelete = (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
     setTarget(e.currentTarget.name);
@@ -21,7 +16,7 @@ const ActivityList = ({ activities }: Props) => {
   return (
     <Segment style={{ marginBottom: '2em' }}>
       <Item.Group>
-        {activities.map((activity) => (
+        {activitiesByDate.map((activity) => (
           <Item key={activity.id}>
             <Item.Content>
               <Item.Header as='a'>{activity.title}</Item.Header>

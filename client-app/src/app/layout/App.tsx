@@ -9,7 +9,6 @@ import LoadingIndecator from './LoadingIndecator';
 
 function App() {
   const { activityStore } = useStore();
-  const { activities } = activityStore;
 
   useEffect(() => {
     activityStore.loadActivities();
@@ -21,7 +20,7 @@ function App() {
     <>
       <Navbar />
       <Container style={{ marginTop: '7em' }}>
-        <ActivityDashboard activities={activities} />
+        <ActivityDashboard />
       </Container>
     </>
   );
