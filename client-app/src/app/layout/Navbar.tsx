@@ -4,16 +4,12 @@ interface Props {
   openForm: () => void;
 }
 
-const Navbar = ({openForm} : Props) => {
+const Navbar = ({ openForm }: Props) => {
   return (
     <Menu inverted fixed='top'>
       <Container>
         <Menu.Item header className='header'>
-          <img
-            src='assets/logo.png'
-            alt='Logo'
-            style={{ marginRight: '10px' }}
-          />
+          <img src='assets/logo.png' alt='Logo' style={{ marginRight: '10px' }} />
           Reactivities
         </Menu.Item>
         <Menu.Item name='Activities' />

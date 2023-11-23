@@ -1,3 +1,4 @@
+import { SyntheticEvent, useState } from 'react';
 import { Button, Icon, Item, Label, Segment } from 'semantic-ui-react';
 
 import { Activity } from '../../../app/models/activity';
@@ -6,11 +7,19 @@ interface Props {
   activities: Activity[];
   selectActivity: (id: string) => void;
   deleteActivity: (id: string) => void;
+  submitting: boolean;
 }
 
-const ActivityList = ({ activities, selectActivity, deleteActivity }: Props) => {
+const ActivityList = ({ activities, selectActivity, deleteActivity, submitting }: Props) => {
+  const [target, setTarget] = useState('');
+
+  const handleActivityDelete = (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
+    setTarget(e.currentTarget.name);
+    deleteActivity(id);
+  };
+
   return (
-    <Segment>
+    <Segment style={{ marginBottom: '2em' }}>
       <Item.Group>
         {activities.map((activity) => (
           <Item key={activity.id}>
@@ -28,8 +37,8 @@ const ActivityList = ({ activities, selectActivity, deleteActivity }: Props) => 
                   floated='right'
                   color='blue'
                   style={{ fontWeight: '500' }}
-                  animated
                   onClick={() => selectActivity(activity.id)}
+                  animated
                 >
                   <Button.Content visible>View</Button.Content>
                   <Button.Content hidden>
@@ -37,11 +46,13 @@ const ActivityList = ({ activities, selectActivity, deleteActivity }: Props) => 
                   </Button.Content>
                 </Button>
                 <Button
+                  name={activity.id}
                   floated='right'
                   color='red'
                   style={{ fontWeight: '500' }}
+                  loading={submitting && activity.id === target}
+                  onClick={(e) => handleActivityDelete(e, activity.id)}
                   animated
-                  onClick={() => deleteActivity(activity.id)}
                 >
                   <Button.Content visible>Delete</Button.Content>
                   <Button.Content hidden>
