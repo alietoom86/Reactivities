@@ -25,7 +25,7 @@ namespace API.Controllers
 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IActionResult))]
-        public async Task<IActionResult> CreateActivity([FromBody] Activity activity)
+        public async Task<IActionResult> CreateActivity(Activity activity)
         {
             await Mediator.Send(new Create.Command { Activity = activity });
             return Ok();
@@ -33,7 +33,7 @@ namespace API.Controllers
 
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IActionResult))]
-        public async Task<IActionResult> EditActivity(Guid id, [FromBody] Activity activity)
+        public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
             activity.Id = id;
             await Mediator.Send(new Edit.Command { Activity = activity });
