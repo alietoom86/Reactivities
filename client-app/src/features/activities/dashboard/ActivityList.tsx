@@ -1,69 +1,34 @@
-import { SyntheticEvent, useState } from 'react';
-import { Button, Icon, Item, Label, Segment } from 'semantic-ui-react';
-import { Link } from 'react-router-dom';
+import { Icon, Label, Segment } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
+import { Fragment } from 'react';
 
 import { useStore } from '../../../app/stores/store';
+import ActivityListItem from './ActivityListItem';
 
 const ActivityList = () => {
-  const [target, setTarget] = useState('');
   const { activityStore } = useStore();
-  const { deleteActivity, activitiesByDate, loading } = activityStore;
-
-  const handleActivityDelete = (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
-    setTarget(e.currentTarget.name);
-    deleteActivity(id);
-  };
+  const { groupedActivities } = activityStore;
 
   return (
-    <Segment style={{ marginBottom: '2em' }}>
-      <Item.Group>
-        {activitiesByDate.map((activity) => (
-          <Item key={activity.id}>
-            <Item.Content>
-              <Item.Header as="a">{activity.title}</Item.Header>
-              <Item.Meta>{activity.date}</Item.Meta>
-              <Item.Description>
-                <div>{activity.description}</div>
-                <div>
-                  {activity.city}, {activity.venue}
-                </div>
-              </Item.Description>
-              <Item.Extra>
-                <Button
-                  as={Link}
-                  to={`/activities/${activity.id}`}
-                  floated="right"
-                  color="blue"
-                  style={{ fontWeight: '500' }}
-                  animated
-                >
-                  <Button.Content visible>View</Button.Content>
-                  <Button.Content hidden>
-                    <Icon name="magnify" />
-                  </Button.Content>
-                </Button>
-                <Button
-                  name={activity.id}
-                  floated="right"
-                  color="red"
-                  style={{ fontWeight: '500' }}
-                  loading={loading && activity.id === target}
-                  onClick={(e) => handleActivityDelete(e, activity.id)}
-                  animated
-                >
-                  <Button.Content visible>Delete</Button.Content>
-                  <Button.Content hidden>
-                    <Icon name="trash" />
-                  </Button.Content>
-                </Button>
-                <Label basic content={activity.category} style={{ textTransform: 'capitalize' }} />
-              </Item.Extra>
-            </Item.Content>
-          </Item>
-        ))}
-      </Item.Group>
-    </Segment>
+    <>
+      {groupedActivities.map(([group, activities]) => {
+        return (
+          <Fragment key={group}>
+            <Segment>
+              <Label color="teal" ribbon>
+                <Icon name="calendar alternate" />
+                {group}
+              </Label>
+              <Segment style={{ marginBottom: '2em', border: 'none', boxShadow: 'none' }}>
+                {activities.map((activity) => (
+                  <ActivityListItem key={activity.id} activity={activity} />
+                ))}
+              </Segment>
+            </Segment>
+          </Fragment>
+        );
+      })}
+    </>
   );
 };
 

@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useStore } from '../../../app/stores/store';
 import ActivityList from './ActivityList';
 import LoadingIndecator from '../../../app/layout/LoadingIndecator';
+import ActivityFilters from './ActivityFilters';
 
 const ActivityDashboard = () => {
   const { activityStore } = useStore();
@@ -23,7 +24,7 @@ const ActivityDashboard = () => {
           <ActivityList />
         </Grid.Column>
         <Grid.Column mobile={16} tablet={6} computer={6}>
-          <h2>Activity Filters</h2>
+          <ActivityFilters />
         </Grid.Column>
       </Grid.Row>
     </Grid>
