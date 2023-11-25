@@ -1,12 +1,14 @@
 import { SyntheticEvent, useState } from 'react';
 import { Button, Icon, Item, Label, Segment } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 
 import { useStore } from '../../../app/stores/store';
 
 const ActivityList = () => {
   const [target, setTarget] = useState('');
   const { activityStore } = useStore();
-  const { selectActivity, deleteActivity, activitiesByDate, loading } = activityStore;
+  const { deleteActivity, activitiesByDate, loading } = activityStore;
 
   const handleActivityDelete = (e: SyntheticEvent<HTMLButtonElement>, id: string) => {
     setTarget(e.currentTarget.name);
@@ -19,7 +21,7 @@ const ActivityList = () => {
         {activitiesByDate.map((activity) => (
           <Item key={activity.id}>
             <Item.Content>
-              <Item.Header as='a'>{activity.title}</Item.Header>
+              <Item.Header as="a">{activity.title}</Item.Header>
               <Item.Meta>{activity.date}</Item.Meta>
               <Item.Description>
                 <div>{activity.description}</div>
@@ -29,21 +31,22 @@ const ActivityList = () => {
               </Item.Description>
               <Item.Extra>
                 <Button
-                  floated='right'
-                  color='blue'
+                  as={Link}
+                  to={`/activities/${activity.id}`}
+                  floated="right"
+                  color="blue"
                   style={{ fontWeight: '500' }}
-                  onClick={() => selectActivity(activity.id)}
                   animated
                 >
                   <Button.Content visible>View</Button.Content>
                   <Button.Content hidden>
-                    <Icon name='magnify' />
+                    <Icon name="magnify" />
                   </Button.Content>
                 </Button>
                 <Button
                   name={activity.id}
-                  floated='right'
-                  color='red'
+                  floated="right"
+                  color="red"
                   style={{ fontWeight: '500' }}
                   loading={loading && activity.id === target}
                   onClick={(e) => handleActivityDelete(e, activity.id)}
@@ -51,7 +54,7 @@ const ActivityList = () => {
                 >
                   <Button.Content visible>Delete</Button.Content>
                   <Button.Content hidden>
-                    <Icon name='trash' />
+                    <Icon name="trash" />
                   </Button.Content>
                 </Button>
                 <Label basic content={activity.category} style={{ textTransform: 'capitalize' }} />
@@ -64,4 +67,4 @@ const ActivityList = () => {
   );
 };
 
-export default ActivityList;
+export default observer(ActivityList);
