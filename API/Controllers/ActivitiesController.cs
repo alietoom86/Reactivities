@@ -1,4 +1,5 @@
 using Application.Activities;
+using Application.Core;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -8,44 +9,34 @@ namespace API.Controllers
     public class ActivitiesController : BaseApiController
     {
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Activity>))]
         public async Task<IActionResult> GetActivities()
         {
-            IEnumerable<Activity> activities = await Mediator.Send(new List.Query());
-            return Ok(activities);
+            return HandleResult<List<Activity>>(await Mediator.Send(new List.Query()));
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Activity))]
         public async Task<IActionResult> GetActivity(Guid id)
         {
-            Activity activity = await Mediator.Send(new Details.Query { Id = id });
-            return Ok(activity);
+            return HandleResult<Activity>(await Mediator.Send(new Details.Query { Id = id }));
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IActionResult))]
         public async Task<IActionResult> CreateActivity(Activity activity)
         {
-            await Mediator.Send(new Create.Command { Activity = activity });
-            return Ok();
+            return HandleResult<Unit>(await Mediator.Send(new Create.Command { Activity = activity }));
         }
 
         [HttpPut("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IActionResult))]
         public async Task<IActionResult> EditActivity(Guid id, Activity activity)
         {
             activity.Id = id;
-            await Mediator.Send(new Edit.Command { Activity = activity });
-            return Ok();
+            return HandleResult<Unit>(await Mediator.Send(new Edit.Command { Activity = activity }));
         }
 
         [HttpDelete("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IActionResult))]
         public async Task<IActionResult> DeleteActivity(Guid id)
         {
-            await Mediator.Send(new Delete.Command { Id = id });
-            return Ok();
+            return HandleResult<Unit>(await Mediator.Send(new Delete.Command { Id = id }));
         }
     }
 }
